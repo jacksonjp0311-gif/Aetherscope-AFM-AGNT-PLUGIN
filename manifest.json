@@ -1,0 +1,135 @@
+{
+  "name": "aetherscop-afm",
+  "displayName": "AetherScope AFM",
+  "version": "1.0.0",
+  "description": "AFM-derived volumetric field processing and Omega-basin analysis toolkit - harmonic field dashboards for AFM volumes without external API calls",
+  "author": "James Paul Jackson (AGNT Team)",
+  "icon": "wave",
+  "homepage": "https://github.com/jacksonjp0311-gif/AetherScope-AFM",
+  "category": "science",
+  "tags": ["afm", "science", "analysis", "volumetric", "harmonic-fields"],
+  "python": {
+    "packageDir": "src",
+    "module": "aetherscope_afm",
+    "installCommand": "pip install -e .",
+    "depsFile": "pyproject.toml"
+  },
+  "tools": [
+    {
+      "type": "aetherscop-afm-preprocess",
+      "entryPoint": "./aetherscope.js",
+      "schema": {
+        "title": "AetherScope AFM Preprocess",
+        "description": "Preprocess AFM volume: clip, normalize, and superresolve for harmonic field analysis",
+        "parameters": {
+          "input_path": { "type": "string", "required": true, "description": "Path to AFM volume (.npy file)" },
+          "clip_min": { "type": "number", "description": "Minimum clip value" },
+          "clip_max": { "type": "number", "description": "Maximum clip value" },
+          "superres": { "type": "number", "default": 1, "description": "Superresolution factor" },
+          "max_size": { "type": "number", "default": 128, "description": "Maximum dimension size" }
+        }
+      }
+    },
+    {
+      "type": "aetherscop-afm-harmonic-field",
+      "entryPoint": "./aetherscope.js",
+      "schema": {
+        "title": "AetherScope Harmonic Field",
+        "description": "Build harmonic field tensor from preprocessed AFM volume",
+        "parameters": {
+          "volume_path": { "type": "string", "required": true, "description": "Path to preprocessed volume" },
+          "T": { "type": "number", "default": 8, "description": "Number of harmonic frames" }
+        }
+      }
+    },
+    {
+      "type": "aetherscop-afm-metrics",
+      "entryPoint": "./aetherscope.js",
+      "schema": {
+        "title": "AetherScope Metrics",
+        "description": "Compute triad metrics, omega correlation, and curvature from harmonic field analysis",
+        "parameters": {
+          "volume": { "type": "string", "required": true, "description": "Path to volume data" },
+          "delta_phi": { "type": "string", "description": "Path to delta phi data" },
+          "omega_base": { "type": "string", "description": "Path to base omega data" },
+          "omega_noisy": { "type": "string", "description": "Path to noisy omega data" }
+        }
+      }
+    },
+    {
+      "type": "aetherscop-afm-dashboard",
+      "entryPoint": "./aetherscope.js",
+      "schema": {
+        "title": "AetherScope Dashboard",
+        "description": "Generate complete dashboard: visuals, metrics, ledger",
+        "parameters": {
+          "input_path": { "type": "string", "required": true, "description": "Path to input AFM volume" },
+          "output_root": { "type": "string", "default": "outputs", "description": "Output root directory" },
+          "config_path": { "type": "string", "description": "Path to YAML config" },
+          "profile": { "type": "string", "default": "demo", "description": "Config profile (demo/real_afm)" }
+        }
+      }
+    },
+    {
+      "type": "aetherscop-afm-run-single",
+      "entryPoint": "./aetherscope.js",
+      "schema": {
+        "title": "AetherScope Run Single",
+        "description": "Complete single AFM volume analysis pipeline",
+        "parameters": {
+          "input_path": { "type": "string", "required": true, "description": "Path to input AFM volume" },
+          "config": { "type": "string", "description": "Path to YAML config" },
+          "profile": { "type": "string", "default": "default", "description": "Config profile name" },
+          "output_root": { "type": "string", "description": "Override output root directory" }
+        }
+      }
+    },
+    {
+      "type": "aetherscop-afm-telemetry",
+      "entryPoint": "./aetherscope.js",
+      "schema": {
+        "title": "AetherScope Telemetry",
+        "description": "Emit Codex-ready JSON telemetry from analysis metrics",
+        "parameters": {
+          "metrics_json": { "type": "string", "required": true, "description": "Path to metrics JSON" },
+          "output_path": { "type": "string", "description": "Output telemetry path" }
+        }
+      }
+    },
+    {
+      "type": "aetherscop-afm-ledger",
+      "entryPoint": "./aetherscope.js",
+      "schema": {
+        "title": "AetherScope Ledger",
+        "description": "Append governance ledger entry with gratitude hash",
+        "parameters": {
+          "output_root": { "type": "string", "required": true, "description": "Output root directory" },
+          "sample_id": { "type": "string", "description": "Sample identifier" },
+          "run_id": { "type": "string", "description": "Run identifier" },
+          "metrics": { "type": "string", "description": "Path to metrics JSON" }
+        }
+      }
+    },
+    {
+      "type": "aetherscop-afm-visualize",
+      "entryPoint": "./aetherscope.js",
+      "schema": {
+        "title": "AetherScope Visualize",
+        "description": "Generate PNG dashboard visualizations",
+        "parameters": {
+          "volume_slice": { "type": "string", "description": "Path to volume slice" },
+          "field_slice": { "type": "string", "description": "Path to field slice" },
+          "omega_slice": { "type": "string", "description": "Path to omega slice" },
+          "output_dir": { "type": "string", "required": true, "description": "Output directory for PNGs" }
+        }
+      }
+    }
+  ],
+  "integrations": [
+    {
+      "service": "open-url-toolkit",
+      "capability": "preview",
+      "description": "Preview dashboard PNGs in AGNT with authorize button flow"
+    }
+  ]
+}

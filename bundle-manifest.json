@@ -1,0 +1,53 @@
+{
+  "name": "aetherscop-afm",
+  "displayName": "AetherScope AFM",
+  "version": "1.0.0",
+  "description": "AFM volumetric analysis toolkit - harmonic fields, metrics, dashboards (AetherScope-AFM integration)",
+  "author": "James Paul Jackson (AGNT Team)",
+  "license": "MIT",
+  "category": "science+file-management",
+  "icon": "wave",
+  "tags": [
+    "afm",
+    "science",
+    "analysis",
+    "volumetric",
+    "harmonic-fields",
+    "metrics",
+    "visualization",
+    "zero-dependency",
+    "python"
+  ],
+  "pythonIntegration": {
+    "packagePath": "/aetherscope_afm",
+    "entryScript": "src/aetherscope_afm/cli.py",
+    "packageRoot": "../../../../aetherscope_afm",
+    "description": "Executes AetherScope-AFM Python package via CLI subprocess"
+  },
+  "bundle": {
+    "include": [
+      "index.js",
+      "manifest.json",
+      "README.md",
+      "package.json"
+    ],
+    "exclude": [
+      "node_modules",
+      ".git",
+      "tests",
+      "*.spec.js",
+      "*.test.js",
+      "*.pyc",
+      "__pycache__",
+      "src/aetherscope_afm/__pycache__",
+      "src/aetherscope_afm.egg-info",
+      ".pytest_cache"
+    ]
+  },
+  "capabilities": [
+    "subprocess-execution",
+    "file-system-access",
+    "shell-commands",
+    "python-interop"
+  ]
+}

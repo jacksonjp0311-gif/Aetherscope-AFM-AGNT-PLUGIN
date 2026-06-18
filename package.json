@@ -1,0 +1,14 @@
+{
+  "name": "@agnt-plugins/aetherscop-afm",
+  "version": "1.0.0",
+  "description": "AetherScope AFM - AGNT plugin for AFM volumetric analysis (harmonic fields, metrics, dashboards)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo 'Integration tests require AetherScope-AFM Python package'"
+  },
+  "dependencies": {},
+  "optionalDependencies": {},
+  "peerDependencies": {
+    "agnt": ">=1.0.0"
+  }
+}
