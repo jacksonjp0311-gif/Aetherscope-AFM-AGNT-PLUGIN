@@ -1,4 +1,5 @@
 """Matplotlib PNG visualizations."""
+from typing import Dict
 import matplotlib
 matplotlib.use("Agg")
 from pathlib import Path
@@ -47,15 +48,20 @@ def write_visuals(
     delta_phi_slice: Optional[np.ndarray] = None,
 ) -> Dict[str, str]:
     """Write PNG visuals. Returns dict of file paths."""
-    out = {}
+    out: Dict[str, str] = {}
     out["volume_slice"] = _save_image(volume_slice, f"{output_dir}/visuals/{sample_id}_volume_slice.png", "Volume Slice")
     out["field_slice"] = _save_image(field_slice, f"{output_dir}/visuals/{sample_id}_field_slice.png", "Field Slice")
     out["omega_slice"] = _save_image(omega_slice, f"{output_dir}/visuals/{sample_id}_omega_slice.png", "Omega Slice")
     out["hist_volume"] = _save_hist(volume_slice, f"{output_dir}/visuals/{sample_id}_volume_hist.png", "Volume Histogram")
     out["hist_field"] = _save_hist(field_slice, f"{output_dir}/visuals/{sample_id}_field_hist.png", "Field Histogram")
     out["hist_omega"] = _save_hist(omega_slice, f"{output_dir}/visuals/{sample_id}_omega_hist.png", "Omega Histogram")
-    out["trace_omega"] = _save_trace(omega_slice.mean(axis=(1,2)).tolist(),
-                                     f"{output_dir}/visuals/{sample_id}_fractal_trace.png", "Omega Trace")
+    # Trace along time axis (axis 0), safely handling 1D/2D
+    omega_arr = np.asarray(omega_slice)
+    if omega_arr.ndim >= 3:
+        trace_vals = omega_arr.mean(axis=tuple(range(1, omega_arr.ndim))).tolist()
+    else:
+        trace_vals = omega_arr.mean().tolist()
+    out["trace_omega"] = _save_trace(trace_vals, f"{output_dir}/visuals/{sample_id}_fractal_trace.png", "Omega Trace")
     if delta_phi_slice is not None:
         out["delta_phi_slice"] = _save_image(delta_phi_slice, f"{output_dir}/visuals/{sample_id}_delta_phi_slice.png", "Delta Phi Slice")
         out["hist_delta_phi"] = _save_hist(delta_phi_slice, f"{output_dir}/visuals/{sample_id}_delta_phi_hist.png", "Delta Phi Histogram")

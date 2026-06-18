@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: aetherscope-afm
+Version: 1.0.0
+Summary: AFM-derived volumetric field processing and Omega-basin analysis toolkit.
+Author: James Paul Jackson
+License: MIT
+Requires-Python: >=3.9
+License-File: LICENSE
+Requires-Dist: numpy<2.0,>=1.24
+Requires-Dist: matplotlib<4.0,>=3.7
+Requires-Dist: PyYAML<7.0,>=6.0
+Requires-Dist: pydantic<3.0,>=2.7
+Requires-Dist: typer<0.13,>=0.12
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+Dynamic: license-file

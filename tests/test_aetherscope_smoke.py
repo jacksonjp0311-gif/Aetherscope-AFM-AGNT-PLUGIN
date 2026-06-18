@@ -8,7 +8,7 @@ import tempfile
 import numpy as np
 from pathlib import Path
 from aetherscope_afm.cli import run_single
-from aetherscope_afm.dashboard import build_dashboard_run
+from aetherscope_afm.visualize import write_visuals
 from aetherscope_afm.metrics import assemble_metrics
 from aetherscope_afm.field import build_harmonic_field
 from aetherscope_afm.preprocess import preprocess_volume
@@ -49,14 +49,22 @@ def test_e2e_smoke():
         assert "output_root" in artifacts
 
         # 6) Verify dashboard PNG exists
-        dashboard_png = td / f"dashboard/{artifacts['run_id']}_dashboard.png"
+        visuals = write_visuals(
+            output_dir=str(td),
+            sample_id="test",
+            volume_slice=preprocess.central_slice_3d(pre),
+            field_slice=preprocess.central_slice_4d(field),
+            omega_slice=preprocess.central_slice_4d(omega_base),
+        )
+        dashboard_png = td / "visuals" / "test_volume_slice.png"
         # build_dashboard_run creates this; run_single should have called it when profile includes visuals
         # If not, call it explicitly:
-        payload = build_dashboard_run(
-            input_path=str(inp),
-            output_root=str(td),
-            config_path=None,
-            profile="demo",
+        payload = write_visuals(
+            output_dir=str(td),
+            sample_id=str(artifacts["run_id"]),
+            volume_slice=preprocess.central_slice_3d(pre),
+            field_slice=preprocess.central_slice_4d(field),
+            omega_slice=preprocess.central_slice_4d(omega_base),
         )
         assert dashboard_png.exists(), f"Dashboard PNG missing: {dashboard_png}"
 

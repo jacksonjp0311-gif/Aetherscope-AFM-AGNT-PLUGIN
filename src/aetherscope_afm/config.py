@@ -1,11 +1,10 @@
 """Configuration loading and validation."""
-import copy
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field as dc_field
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Optional
 import yaml
-def _deep_merge(base: Dict[str, Any], updates: Dict[str, Any]) -> Dict[str, Any]:
-    out = copy.deepcopy(base)
+def _deep_merge(base: dict, updates: dict) -> dict:
+    out = dict(base)
     for k, v in updates.items():
         if isinstance(v, dict) and isinstance(out.get(k), dict):
             out[k] = _deep_merge(out[k], v)
@@ -28,16 +27,16 @@ class AetherScopeConfig:
     input__assumed_layout: Optional[str] = None
 @dataclass(slots=True)
 class RunConfig:
-    preprocess: AetherScopeConfig = field(default_factory=AetherScopeConfig)
-    field: AetherScopeConfig = field(default_factory=AetherScopeConfig)
-    metrics: AetherScopeConfig = field(default_factory=AetherScopeConfig)
-    noise: AetherScopeConfig = field(default_factory=AetherScopeConfig)
-    output: AetherScopeConfig = field(default_factory=AetherScopeConfig)
-    input: AetherScopeConfig = field(default_factory=AetherScopeConfig)
+    preprocess: AetherScopeConfig = dc_field(default_factory=AetherScopeConfig)
+    field: AetherScopeConfig = dc_field(default_factory=AetherScopeConfig)
+    metrics: AetherScopeConfig = dc_field(default_factory=AetherScopeConfig)
+    noise: AetherScopeConfig = dc_field(default_factory=AetherScopeConfig)
+    output: AetherScopeConfig = dc_field(default_factory=AetherScopeConfig)
+    input: AetherScopeConfig = dc_field(default_factory=AetherScopeConfig)
 def load_config(config_path: Optional[Path], profile: str = "default") -> RunConfig:
     """Load, merge profile config and return validated RunConfig."""
     base = AetherScopeConfig()
-    base_dict = base.model_dump()
+    base_dict = base.__dict__
     # Profile overrides
     profiles = {
         "fixture": {"preprocess__clip_min": 0.0, "preprocess__clip_max": 1.0},
@@ -49,8 +48,6 @@ def load_config(config_path: Optional[Path], profile: str = "default") -> RunCon
         with Path(config_path).open() as f:
             file_cfg = yaml.safe_load(f) or {}
         merged = _deep_merge(merged, file_cfg)
-    # Apply overrides from CLI __overrides__ if present
-    # For CLI use, we'll handle overrides externally via __dict__ manipulation
     cfg = RunConfig()
     for key, value in merged.items():
         parts = key.split("__")
