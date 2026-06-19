@@ -1,7 +1,10 @@
-const { exec } = require('child_process');
-const path = require('path');
-const openUrl = require('./open_url_tool');
+import { exec } from 'child_process';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import openUrl from './open_url_tool.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const PYTHON_SRC = path.join(__dirname, 'src', 'aetherscope_afm');
 const TIMEOUT_MS = 300_000;
 
@@ -28,20 +31,26 @@ function runPython(script, args) {
   });
 }
 
-module.exports = async function(input) {
-  const type = input.__ragrant_type || input.type || 'dashboard';
-  try {
-    if (type === 'open-url') {
-      return await openUrl.execute({ url: input.url, new: input.new });
+class AetherScopeAFM {
+  constructor() { this.name = 'aetherscop-afm'; }
+
+  async execute(params) {
+    const type = params.__tool_type || 'dashboard';
+    try {
+      if (type === 'open-url') {
+        return await openUrl.execute({ url: params.url, new: params.new });
+      }
+      const out = await runPython(path.join(PYTHON_SRC, 'cli.py'), [
+        'run-single',
+        '--input-path', params.input_path || '.',
+        '--profile', params.profile || 'demo',
+        '--output-root', params.output_root || 'outputs',
+      ]);
+      return JSON.parse(out);
+    } catch (e) {
+      return { error: e.message || String(e), type };
     }
-    const out = await runPython(path.join(PYTHON_SRC, 'cli.py'), [
-      'run-single',
-      '--input-path', input.input_path || '.',
-      '--profile', input.profile || 'demo',
-      '--output-root', input.output_root || 'outputs',
-    ]);
-    return JSON.parse(out);
-  } catch (e) {
-    return { error: e.message || String(e), type };
   }
-};
+}
+
+export default new AetherScopeAFM();

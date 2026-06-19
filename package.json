@@ -1,14 +1,16 @@
 {
-  "name": "@agnt-plugins/aetherscop-afm",
+  "name": "aetherscop-afm",
   "version": "1.1.0",
-  "description": "AetherScope AFM - AGNT plugin for AFM volumetric analysis",
+  "description": "AetherScope AFM - AGNT plugin for AFM volumetric analysis. Zero-dependency, offline, local-first.",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "python -m pytest tests/ -v",
-    "test:node": "node tests/test_smoke_minimal.js"
+    "test": "node tests/test_smoke_minimal.js"
   },
   "dependencies": {},
   "peerDependencies": {
     "agnt": ">=1.0.0"
-  }
+  },
+  "author": "James Paul Jackson",
+  "license": "MIT"
 }
