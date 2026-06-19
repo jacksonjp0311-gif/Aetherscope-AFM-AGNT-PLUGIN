@@ -2,12 +2,18 @@
   "name": "aetherscop-afm",
   "displayName": "AetherScope AFM",
   "version": "1.1.0",
-  "description": "AFM-derived volumetric field processing and Omega-basin analysis toolkit - harmonic field dashboards for AFM volumes without external API calls",
-  "author": "James Paul Jackson (AGNT Team)",
+  "description": "AFM-derived volumetric field processing and Omega-basin analysis toolkit. Zero-dependency, offline, local-first.",
+  "author": "James Paul Jackson",
   "icon": "wave",
   "homepage": "https://github.com/jacksonjp0311-gif/Aetherscope-AFM-AGNT-PLUGIN",
   "category": "science",
-  "tags": ["afm", "science", "analysis", "volumetric", "harmonic-fields"],
+  "tags": [
+    "afm",
+    "science",
+    "analysis",
+    "volumetric",
+    "harmonic-fields"
+  ],
   "python": {
     "packageDir": "src",
     "module": "aetherscope_afm",
@@ -19,14 +25,27 @@
       "type": "aetherscop-afm-preprocess",
       "entryPoint": "./index.js",
       "schema": {
-        "title": "AetherScope AFM Preprocess",
-        "description": "Preprocess AFM volume: clip, normalize, and superresolve for harmonic field analysis",
+        "title": "Preprocess",
+        "description": "Clip, normalize, superresolve AFM volumes",
         "parameters": {
-          "input_path": {"type": "string", "required": true, "description": "Path to AFM volume (.npy file)"},
-          "clip_min": {"type": "number", "description": "Minimum clip value"},
-          "clip_max": {"type": "number", "description": "Maximum clip value"},
-          "superres": {"type": "number", "default": 1, "description": "Superresolution factor"},
-          "max_size": {"type": "number", "default": 128, "description": "Maximum dimension size"}
+          "input_path": {
+            "type": "string",
+            "required": true
+          },
+          "clip_min": {
+            "type": "number"
+          },
+          "clip_max": {
+            "type": "number"
+          },
+          "superres": {
+            "type": "number",
+            "default": 1
+          },
+          "max_size": {
+            "type": "number",
+            "default": 128
+          }
         }
       }
     },
@@ -34,11 +53,17 @@
       "type": "aetherscop-afm-harmonic-field",
       "entryPoint": "./index.js",
       "schema": {
-        "title": "AetherScope Harmonic Field",
-        "description": "Build harmonic field tensor from preprocessed AFM volume",
+        "title": "Harmonic Field",
+        "description": "Build T-frame sinusoidal harmonic field tensor",
         "parameters": {
-          "volume_path": {"type": "string", "required": true, "description": "Path to preprocessed volume"},
-          "T": {"type": "number", "default": 8, "description": "Number of harmonic frames"}
+          "volume_path": {
+            "type": "string",
+            "required": true
+          },
+          "T": {
+            "type": "number",
+            "default": 8
+          }
         }
       }
     },
@@ -46,13 +71,22 @@
       "type": "aetherscop-afm-metrics",
       "entryPoint": "./index.js",
       "schema": {
-        "title": "AetherScope Metrics",
-        "description": "Compute triad metrics, omega correlation, and curvature from harmonic field analysis",
+        "title": "Metrics",
+        "description": "Triad E/I/C, lambda_eff, curvature, omega correlation",
         "parameters": {
-          "volume": {"type": "string", "required": true, "description": "Path to volume data"},
-          "delta_phi": {"type": "string", "description": "Path to delta phi data"},
-          "omega_base": {"type": "string", "description": "Path to base omega data"},
-          "omega_noisy": {"type": "string", "description": "Path to noisy omega data"}
+          "volume": {
+            "type": "string",
+            "required": true
+          },
+          "delta_phi": {
+            "type": "string"
+          },
+          "omega_base": {
+            "type": "string"
+          },
+          "omega_noisy": {
+            "type": "string"
+          }
         }
       }
     },
@@ -60,13 +94,24 @@
       "type": "aetherscop-afm-dashboard",
       "entryPoint": "./index.js",
       "schema": {
-        "title": "AetherScope Dashboard",
-        "description": "Generate complete dashboard: visuals, metrics, ledger",
+        "title": "Dashboard",
+        "description": "Full pipeline: visuals + metrics + ledger",
         "parameters": {
-          "input_path": {"type": "string", "required": true, "description": "Path to input AFM volume"},
-          "output_root": {"type": "string", "default": "outputs", "description": "Output root directory"},
-          "config_path": {"type": "string", "description": "Path to YAML config"},
-          "profile": {"type": "string", "default": "demo", "description": "Config profile (demo/real_afm)"}
+          "input_path": {
+            "type": "string",
+            "required": true
+          },
+          "output_root": {
+            "type": "string",
+            "default": "outputs"
+          },
+          "config_path": {
+            "type": "string"
+          },
+          "profile": {
+            "type": "string",
+            "default": "demo"
+          }
         }
       }
     },
@@ -74,13 +119,23 @@
       "type": "aetherscop-afm-run-single",
       "entryPoint": "./index.js",
       "schema": {
-        "title": "AetherScope Run Single",
-        "description": "Complete single AFM volume analysis pipeline",
+        "title": "Run Single",
+        "description": "End-to-end single volume analysis",
         "parameters": {
-          "input_path": {"type": "string", "required": true, "description": "Path to input AFM volume"},
-          "config": {"type": "string", "description": "Path to YAML config"},
-          "profile": {"type": "string", "default": "default", "description": "Config profile name"},
-          "output_root": {"type": "string", "description": "Override output root directory"}
+          "input_path": {
+            "type": "string",
+            "required": true
+          },
+          "config": {
+            "type": "string"
+          },
+          "profile": {
+            "type": "string",
+            "default": "default"
+          },
+          "output_root": {
+            "type": "string"
+          }
         }
       }
     },
@@ -89,11 +144,16 @@
       "entryPoint": "./open_url_tool.js",
       "schema": {
         "title": "Open URL",
-        "description": "Open a URL in the system web browser",
+        "description": "Open a URL in the system browser",
         "parameters": {
-          "url": {"type": "string", "required": true, "description": "The URL to open"},
-          "title": {"type": "string", "description": "Window title"},
-          "new": {"type": "number", "default": 1, "description": "0=same window, 1=new window"}
+          "url": {
+            "type": "string",
+            "required": true
+          },
+          "new": {
+            "type": "number",
+            "default": 1
+          }
         }
       }
     },
@@ -101,11 +161,16 @@
       "type": "aetherscop-afm-telemetry",
       "entryPoint": "./index.js",
       "schema": {
-        "title": "AetherScope Telemetry",
-        "description": "Emit Codex-ready JSON telemetry from analysis metrics",
+        "title": "Telemetry",
+        "description": "Emit Codex-ready JSON telemetry",
         "parameters": {
-          "metrics_json": {"type": "string", "required": true, "description": "Path to metrics JSON"},
-          "output_path": {"type": "string", "description": "Output telemetry path"}
+          "metrics_json": {
+            "type": "string",
+            "required": true
+          },
+          "output_path": {
+            "type": "string"
+          }
         }
       }
     },
@@ -113,13 +178,22 @@
       "type": "aetherscop-afm-ledger",
       "entryPoint": "./index.js",
       "schema": {
-        "title": "AetherScope Ledger",
+        "title": "Ledger",
         "description": "Append governance ledger entry with gratitude hash",
         "parameters": {
-          "output_root": {"type": "string", "required": true, "description": "Output root directory"},
-          "sample_id": {"type": "string", "description": "Sample identifier"},
-          "run_id": {"type": "string", "description": "Run identifier"},
-          "metrics": {"type": "string", "description": "Path to metrics JSON"}
+          "output_root": {
+            "type": "string",
+            "required": true
+          },
+          "sample_id": {
+            "type": "string"
+          },
+          "run_id": {
+            "type": "string"
+          },
+          "metrics": {
+            "type": "string"
+          }
         }
       }
     },
@@ -127,13 +201,22 @@
       "type": "aetherscop-afm-visualize",
       "entryPoint": "./index.js",
       "schema": {
-        "title": "AetherScope Visualize",
+        "title": "Visualize",
         "description": "Generate PNG dashboard visualizations",
         "parameters": {
-          "volume_slice": {"type": "string", "description": "Path to volume slice"},
-          "field_slice": {"type": "string", "description": "Path to field slice"},
-          "omega_slice": {"type": "string", "description": "Path to omega slice"},
-          "output_dir": {"type": "string", "required": true, "description": "Output directory for PNGs"}
+          "volume_slice": {
+            "type": "string"
+          },
+          "field_slice": {
+            "type": "string"
+          },
+          "omega_slice": {
+            "type": "string"
+          },
+          "output_dir": {
+            "type": "string",
+            "required": true
+          }
         }
       }
     },
@@ -141,10 +224,13 @@
       "type": "aetherscop-afm-file-explorer",
       "entryPoint": "./file_tools.js",
       "schema": {
-        "title": "AetherScope File Explorer",
-        "description": "Browse directories and list .npy AFM volumes",
+        "title": "File Explorer",
+        "description": "Browse directories and list .npy volumes",
         "parameters": {
-          "base_path": {"type": "string", "default": ".", "description": "Base directory to explore"}
+          "base_path": {
+            "type": "string",
+            "default": "."
+          }
         }
       }
     },
@@ -152,11 +238,17 @@
       "type": "aetherscop-afm-file-search",
       "entryPoint": "./file_tools.js",
       "schema": {
-        "title": "AetherScope File Search",
-        "description": "Grep/regex search across .npy volume collections",
+        "title": "File Search",
+        "description": "Grep/regex search across volume collections",
         "parameters": {
-          "base_path": {"type": "string", "required": true, "description": "Base directory to search"},
-          "pattern": {"type": "string", "required": true, "description": "Search pattern (regex or glob)"}
+          "base_path": {
+            "type": "string",
+            "required": true
+          },
+          "pattern": {
+            "type": "string",
+            "required": true
+          }
         }
       }
     },
@@ -164,10 +256,13 @@
       "type": "aetherscop-afm-file-analyze",
       "entryPoint": "./file_tools.js",
       "schema": {
-        "title": "AetherScope File Analyze",
-        "description": "Quick metadata + shape + dtype summary of a volume",
+        "title": "File Analyze",
+        "description": "Quick metadata + shape + dtype summary",
         "parameters": {
-          "input_path": {"type": "string", "required": true, "description": "Path to .npy file"}
+          "input_path": {
+            "type": "string",
+            "required": true
+          }
         }
       }
     }
@@ -176,7 +271,7 @@
     {
       "service": "open-url-toolkit",
       "capability": "preview",
-      "description": "Preview dashboard PNGs in AGNT with authorize button flow"
+      "description": "Preview dashboard PNGs in AGNT"
     }
   ]
 }

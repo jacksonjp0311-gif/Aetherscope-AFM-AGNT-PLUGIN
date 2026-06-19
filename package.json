@@ -1,18 +1,13 @@
 {
   "name": "@agnt-plugins/aetherscop-afm",
   "version": "1.1.0",
-  "description": "AetherScope AFM - AGNT plugin for AFM volumetric analysis with 11 tools, open-url integration, and policy gating",
+  "description": "AetherScope AFM - AGNT plugin for AFM volumetric analysis",
   "main": "index.js",
   "scripts": {
-    "test": "pytest tests/ -v",
-    "test:node": "jest tests/ -v",
-    "test:smoke": "node --test tests/test_smoke_minimal.js"
+    "test": "python -m pytest tests/ -v",
+    "test:node": "node tests/test_smoke_minimal.js"
   },
   "dependencies": {},
-  "devDependencies": {
-    "jest": "^30.2.0",
-    "pytest": "^8.3.5"
-  },
   "peerDependencies": {
     "agnt": ">=1.0.0"
   }
