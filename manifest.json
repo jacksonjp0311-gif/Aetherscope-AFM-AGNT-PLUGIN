@@ -1,7 +1,7 @@
 {
   "name": "aetherscop-afm",
   "displayName": "AetherScope AFM",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "AFM-derived volumetric field processing and Omega-basin analysis toolkit. Zero-dependency, offline, local-first scientific computing for AGNT agents.",
   "author": "James Paul Jackson",
   "icon": "wave",
@@ -10,8 +10,55 @@
   "tags": ["afm", "science", "analysis", "volumetric", "harmonic-fields", "microscopy"],
   "tools": [
     {
-      "type": "aetherscop-afm-preprocess",
+      "type": "aetherscop-afm-dashboard",
       "entryPoint": "./index.js",
+      "schema": {
+        "title": "AFM Dashboard",
+        "category": "action",
+        "type": "aetherscop-afm-dashboard",
+        "icon": "view-dashboard",
+        "description": "Generate complete dashboard: visuals, metrics, ledger, and telemetry",
+        "parameters": {
+          "input_path": {"type": "string", "inputType": "text", "required": true, "description": "Path to input AFM volume"},
+          "output_root": {"type": "string", "inputType": "text", "default": "outputs", "description": "Output root directory"},
+          "config_path": {"type": "string", "inputType": "text", "description": "Path to YAML config"},
+          "profile": {"type": "string", "inputType": "select", "default": "demo", "options": ["fixture", "demo", "production"], "description": "Config profile"}
+        },
+        "outputs": {
+          "run_id": {"type": "string", "description": "Unique run identifier"},
+          "output_root": {"type": "string", "description": "Output directory path"},
+          "metrics": {"type": "object", "description": "Computed metrics object"},
+          "visuals": {"type": "object", "description": "Map of visualization file paths"},
+          "error": {"type": "string"}
+        }
+      }
+    },
+    {
+      "type": "aetherscop-afm-run-single",
+      "entryPoint": "./afm-run-single.js",
+      "schema": {
+        "title": "Run Single",
+        "category": "action",
+        "type": "aetherscop-afm-run-single",
+        "icon": "play",
+        "description": "End-to-end single AFM volume analysis pipeline",
+        "parameters": {
+          "input_path": {"type": "string", "inputType": "text", "required": true, "description": "Path to input AFM volume"},
+          "config": {"type": "string", "inputType": "text", "description": "Path to YAML config"},
+          "profile": {"type": "string", "inputType": "select", "default": "demo", "options": ["fixture", "demo", "production"], "description": "Config profile name"},
+          "output_root": {"type": "string", "inputType": "text", "description": "Override output root directory"}
+        },
+        "outputs": {
+          "run_id": {"type": "string"},
+          "metrics": {"type": "object"},
+          "visuals": {"type": "object"},
+          "error": {"type": "string"}
+        }
+      }
+    },
+    {
+      "type": "aetherscop-afm-preprocess",
+      "entryPoint": "./afm-preprocess.js",
       "schema": {
         "title": "AFM Preprocess",
         "category": "action",
@@ -33,7 +80,7 @@
     },
     {
       "type": "aetherscop-afm-harmonic-field",
-      "entryPoint": "./index.js",
+      "entryPoint": "./afm-harmonic-field.js",
       "schema": {
         "title": "Harmonic Field",
         "category": "action",
@@ -52,7 +99,7 @@
     },
     {
       "type": "aetherscop-afm-metrics",
-      "entryPoint": "./index.js",
+      "entryPoint": "./afm-metrics.js",
       "schema": {
         "title": "AFM Metrics",
         "category": "action",
@@ -68,56 +115,18 @@
         "outputs": {
           "C_triad": {"type": "number", "description": "Triad coherence metric"},
           "lambda_eff": {"type": "number", "description": "Effective lambda"},
-          "error": {"type": "string"}
-        }
-      }
-    },
-    {
-      "type": "aetherscop-afm-dashboard",
-      "entryPoint": "./index.js",
-      "schema": {
-        "title": "AFM Dashboard",
-        "category": "action",
-        "type": "aetherscop-afm-dashboard",
-        "icon": "view-dashboard",
-        "description": "Generate complete dashboard: visuals, metrics, ledger, and telemetry",
-        "parameters": {
-          "input_path": {"type": "string", "inputType": "text", "required": true, "description": "Path to input AFM volume"},
-          "output_root": {"type": "string", "inputType": "text", "default": "outputs", "description": "Output root directory"},
-          "config_path": {"type": "string", "inputType": "text", "description": "Path to YAML config"},
-          "profile": {"type": "string", "inputType": "select", "default": "demo", "options": ["fixture", "demo", "production"], "description": "Config profile"}
-        },
-        "outputs": {
-          "run_id": {"type": "string", "description": "Unique run identifier"},
-          "output_root": {"type": "string", "description": "Output directory path"},
-          "error": {"type": "string"}
-        }
-      }
-    },
-    {
-      "type": "aetherscop-afm-run-single",
-      "entryPoint": "./index.js",
-      "schema": {
-        "title": "Run Single",
-        "category": "action",
-        "type": "aetherscop-afm-run-single",
-        "icon": "play",
-        "description": "End-to-end single AFM volume analysis pipeline",
-        "parameters": {
-          "input_path": {"type": "string", "inputType": "text", "required": true, "description": "Path to input AFM volume"},
-          "config": {"type": "string", "inputType": "text", "description": "Path to YAML config"},
-          "profile": {"type": "string", "inputType": "select", "default": "default", "options": ["fixture", "demo", "production"], "description": "Config profile name"},
-          "output_root": {"type": "string", "inputType": "text", "description": "Override output root directory"}
-        },
-        "outputs": {
-          "run_id": {"type": "string"},
+          "E_mean_abs_volume": {"type": "number"},
+          "I_mean_delta_phi": {"type": "number"},
+          "barrier_scale": {"type": "number"},
+          "curvature": {"type": "number"},
+          "omega_corvature": {"type": "number"},
           "error": {"type": "string"}
         }
       }
     },
     {
       "type": "aetherscop-afm-telemetry",
-      "entryPoint": "./index.js",
+      "entryPoint": "./afm-telemetry.js",
       "schema": {
         "title": "Telemetry",
         "category": "action",
@@ -136,7 +145,7 @@
     },
     {
       "type": "aetherscop-afm-ledger",
-      "entryPoint": "./index.js",
+      "entryPoint": "./afm-ledger.js",
       "schema": {
         "title": "Ledger",
         "category": "action",
@@ -157,7 +166,7 @@
     },
     {
       "type": "aetherscop-afm-visualize",
-      "entryPoint": "./index.js",
+      "entryPoint": "./afm-visualize.js",
       "schema": {
         "title": "Visualize",
         "category": "action",
@@ -178,7 +187,7 @@
     },
     {
       "type": "aetherscop-afm-file-explorer",
-      "entryPoint": "./file_tools.js",
+      "entryPoint": "./afm-file-explorer.js",
       "schema": {
         "title": "File Explorer",
         "category": "action",
@@ -196,7 +205,7 @@
     },
     {
       "type": "aetherscop-afm-file-search",
-      "entryPoint": "./file_tools.js",
+      "entryPoint": "./afm-file-search.js",
       "schema": {
         "title": "File Search",
         "category": "action",
@@ -215,7 +224,7 @@
     },
     {
       "type": "aetherscop-afm-file-analyze",
-      "entryPoint": "./file_tools.js",
+      "entryPoint": "./afm-file-analyze.js",
       "schema": {
         "title": "File Analyze",
         "category": "action",
