@@ -18,6 +18,8 @@ AetherScope-AFM is a production-grade AGNT plugin that brings **atomic force mic
 - **Self-contained `.agnt` package** — 9.7 KB, installs in one click
 - **30-second smoke tests** — 16/16 passing (8 Python + 8 Node)
 
+- <img width="1086" height="760" alt="image" src="https://github.com/user-attachments/assets/57837138-d257-475a-ab76-10a1c96c097e" />
+
 ## Tools (12)
 
 | # | Tool | Description |
